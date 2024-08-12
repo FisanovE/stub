@@ -1,7 +1,8 @@
 package com.example.stub;
 
+import com.example.stub.model.RequestMessage;
+import com.example.stub.service.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class Controller {
         if (sent) {
             return ResponseEntity.ok("200 OK");
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("500 Internal Server Error");
+            return ResponseEntity.internalServerError().body("500 Internal Server Error");
         }
     }
 

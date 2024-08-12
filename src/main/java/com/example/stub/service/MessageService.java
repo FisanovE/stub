@@ -1,14 +1,16 @@
-package com.example.stub;
+package com.example.stub.service;
 
+import com.example.stub.model.MessageToKafka;
+import com.example.stub.model.RequestMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -23,17 +25,16 @@ public class MessageService {
             long timestamp = Instant.now().toEpochMilli();
 
             MessageToKafka messageToKafka = new MessageToKafka();
-            messageToKafka.setId(message.getMsg_id());
+            messageToKafka.setId(message.getId());
             messageToKafka.setTimestamp(String.valueOf(timestamp));
             messageToKafka.setMethod("POST");
             messageToKafka.setUri("/post-message");
 
-            String jsonMessage = objectMapper.writeValueAsString(messageToKafka);
-            CompletableFuture<SendResult<String, String>> future = producerService.sendMessage(jsonMessage);
-            System.out.println(future.get());
+            CompletableFuture<SendResult<String, MessageToKafka>> future = producerService.sendMessage(messageToKafka);
+            future.orTimeout(1000, TimeUnit.MILLISECONDS);
             return true;
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.info(e.getMessage());
             return false;
         }
     }

@@ -1,4 +1,4 @@
-package com.example.stub;
+package com.example.stub.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
